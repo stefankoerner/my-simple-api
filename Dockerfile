@@ -1,30 +1,32 @@
+#dockerfile
 FROM ubuntu:14.04
 
-RUN echo "1.565.1" > .lts-version-number
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y wget git curl zip vim
-RUN apt-get update && apt-get install -y apache2 php5 php5-pgsql
-RUN apt-get update && apt-get install -y php5-intl imagemagick
+# common packages
+RUN apt-get update && apt-get -y install \
+		software-properties-common \
+		build-essential \
+		curl \
+		git \
+		rsync \
+		zip \
+		wget \
+		python \
+		vim
 
-RUN usermod -U www-data && chsh -s /bin/bash www-data
+# install php and postgresql
+RUN apt-get update && apt-get -y install \
+		postgresql \
+		php5 \
+		php5-pgsql \
+		php5-intl
 
-RUN echo 'ServerName ${SERVER_NAME}' >> /etc/apache2/conf-enabled/servername.conf
+# build project
+COPY ./ /www/my-simple-api
+WORKDIR /www/my-simple-api
+RUN wget http://getcomposer.org/composer.phar
+RUN php composer.phar install
 
-COPY enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
-COPY run_apache.sh /var/www/
-RUN a2enmod rewrite 
-
-
-#USER www-data
-
-#VOLUME ["/var/www/html", "/var/log/apache2" ]
-ENV SERVER_NAME docker-apache-php
-
-
-# for main web interface:
-EXPOSE 80
-
-WORKDIR /var/www/html
-
-
-CMD ["/var/www/run_apache.sh"]
+EXPOSE 4202
+ENTRYPOINT ["docker/run.sh"]
