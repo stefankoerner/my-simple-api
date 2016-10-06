@@ -22,6 +22,12 @@ RUN apt-get update && apt-get -y install \
 		php5-pgsql \
 		php5-intl
 
+# install send_mail
+RUN apt-get update && apt-get -y install \
+		ssmtp && \
+		echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf && \
+		echo 'sendmail_path = "/usr/sbin/ssmtp -t"' > /etc/php5/cli/conf.d/mail.ini
+
 # build project
 COPY ./ /www/my-simple-api
 WORKDIR /www/my-simple-api
