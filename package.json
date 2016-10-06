@@ -1,0 +1,24 @@
+{
+  "name": "my-simple-api",
+  "version": "1.0.0",
+  "description": "A simple api for my-simple-frontend",
+  "scripts": {
+    "apidoc": "apidoc -i src/ -o src/apidoc/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefankoerner/my-simple-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefankoerner/my-simple-api/issues"
+  },
+  "homepage": "https://github.com/stefankoerner/my-simple-api#readme",
+  "private": true,
+  "dependencies": {
+    "apidoc": "^0.16.1"
+  },
+  "devDependencies": {
+  }
+}

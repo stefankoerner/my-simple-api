@@ -23,11 +23,23 @@ session_start();
 $app = new \Slim\App();
 
 // Routes
+
+/**
+ * @api {get} /apartments Request list of apartment entities
+ * @apiGroup Apartment
+ * @apiName GetApartmentList
+ */
 $app->get('/apartments', function (Request $request, Response $response, $args) {
 	echo "/apartments";
 
 });
 
+/**
+ * @api {get} /apartments/:apartmentId Request apartment information
+ * @apiGroup Apartment
+ * @apiName GetSingleApartment
+ * @apiParam {Number} apartmentId Unique apartment id
+ */
 $app->get('/apartments/{apartmentId}', function (Request $request, Response $response, $args) {
 	echo "/apartments/".$request->getAttribute('apartmentId');
 });
