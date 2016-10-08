@@ -1,16 +1,24 @@
 drop table if exists my_simple_api;
 create table my_simple_api (
-	id INT,
-	line1 VARCHAR(50),
-	line2 VARCHAR(50),
-	street VARCHAR(50),
-	no VARCHAR(50),
-	country VARCHAR(50),
-	zip VARCHAR(50),
-	city VARCHAR(50),
-	email VARCHAR(50),
-	created TIMESTAMP
+  id      SERIAL PRIMARY KEY,
+  line1   VARCHAR(50),
+  line2   VARCHAR(50),
+  street  VARCHAR(50),
+  no      VARCHAR(50),
+  country VARCHAR(50),
+  zip     VARCHAR(50),
+  city    VARCHAR(50),
+  email   VARCHAR(50),
+  created TIMESTAMP,
+  token   VARCHAR(50)
 );
+CREATE INDEX search_line1
+  ON my_simple_api USING BTREE
+  (line1 COLLATE pg_catalog."default" varchar_pattern_ops);
+CREATE INDEX search_email
+  ON my_simple_api USING BTREE
+  (email COLLATE pg_catalog."default" varchar_pattern_ops);
+
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (1, 'Teresa Boyd', null, 'Northfield', '2', 'SE', '573 36', 'Tranås', 'tboyd0@discuz.net', '2015-11-03 10:00:00');
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (2, 'Teresa Crawford', null, 'Monterey', '07', 'ID', null, 'Jatiprahu', 'tcrawford1@4shared.com', '2016-02-20 10:00:00');
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (3, 'William Hart', null, 'Dahle', '12', 'US', '21281', 'Baltimore', 'whart2@google.es', '2015-12-09 10:00:00');
@@ -245,3 +253,5 @@ insert into my_simple_api (id, line1, line2, street, no, country, zip, city, ema
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (232, 'Raymond Gardner', null, 'Morrow', '0', 'PT', '3090-469', 'Maiorca', 'rgardner6f@vimeo.com', '2016-03-09 10:00:00');
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (233, 'Denise Armstrong', null, 'Independence', '610', 'CN', null, 'Shangshaleng', 'darmstrong6g@indiegogo.com', '2016-05-26 10:00:00');
 insert into my_simple_api (id, line1, line2, street, no, country, zip, city, email, created) values (234, 'Paul Ward', null, 'Vahlen', '06', 'RU', null, 'Zhulebino', 'pward6h@youku.com', '2016-03-06 10:00:00');
+
+SELECT setval('my_simple_api_id_seq', (SELECT MAX(id) FROM my_simple_api));

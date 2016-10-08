@@ -74,6 +74,15 @@ $app->get('/apartments/{apartmentId}', function (Request $request, Response $res
 	// get item from database
 	$item = ApartmentService::getInstance()->getItem($request->getAttribute('apartmentId'));
 
+	// check token, if exists
+	if (isset($_GET['token']) && is_string($_GET['token'])) {
+		if ($item['token'] !== $_GET['token']) {
+			$response = $response->withStatus(403);
+			$response->getBody()->write("You cannot edit this apartment.");
+			return $response;
+		}
+	}
+
 	// convert to REST format
 	$body = [
 		"apartment" => $item
@@ -85,33 +94,53 @@ $app->get('/apartments/{apartmentId}', function (Request $request, Response $res
 });
 
 /**
- * @api {post} /apartments/:apartmentId Crete a new apartment
+ * @api {post} /apartments Crete a new apartment
  * @apiGroup Apartment
  * @apiParam {String} [key] value
  * @apiName CreateSingleApartment
  */
 $app->post('/apartments', function (Request $request, Response $response, $args) {
+
 	// add item to database
 	$data = $request->getParsedBody();
 	ApartmentService::getInstance()->addItem($data);
-	$response->withStatus(201);
+	$response = $response->withStatus(201);
 	return $response;
 });
 
 /**
- * @api {get} /apartments/:apartmentId Request apartment information
+ * @api {put} /apartments/:apartmentId Request apartment information
  * @apiGroup Apartment
- * @apiName GetSingleApartment
+ * @apiName UpdateSingleApartment
  * @apiParam {Number} apartmentId Unique apartment id
  */
 $app->put('/apartments/{apartmentId}', function (Request $request, Response $response, $args) {
-	// get item from database
-	$item = ApartmentService::getInstance()->add(
-		$request->getQueryParams()
-	);
-	$response->withStatus(201);
+
+	$data = $request->getParsedBody();
+	$item = ApartmentService::getInstance()->getItem($request->getAttribute('apartmentId'));
+
+	// check token
+	$token = isset($_GET['token']) && is_string($_GET['token']) ? $_GET['token'] : false;
+	if ($token !== $item['token']) {
+		$response = $response->withStatus(403);
+		$response->getBody()->write("You cannot edit this apartment.");
+		return $response;
+	}
+
+	// update apartment
+	ApartmentService::getInstance()->updateItem($item['id'], $data);
+	$response = $response->withStatus(204);
 	return $response;
 });
 
+// Enable CORS
+$app->add(function ($req, $res, $next) {
+	/* @var Response $response */
+	$response = $next($req, $res);
+	return $response
+		->withHeader('Access-Control-Allow-Origin', '*')
+		->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+		->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 // Run app
 $app->run();

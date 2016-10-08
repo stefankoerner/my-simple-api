@@ -4,6 +4,13 @@ namespace MySimpleApi;
 
 class ApartmentService {
 
+	const EMAIL = "
+You can edit the apartment details here:
+{{link}}
+
+This email is spam? Check the source of this email, search for the domain of the sender and contact the domain owner. 
+";
+
 	/**
 	 * @var ApartmentService
 	 */
@@ -59,7 +66,7 @@ class ApartmentService {
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @return array
 	 */
 	public function getItem($id) {
@@ -83,12 +90,12 @@ class ApartmentService {
 	 */
 	public function addItem($data = []) {
 
-		$keys = ['created'];
-		$values = [date("Y-m-d H:i:s")];
+		$keys = ['created', 'token'];
+		$values = [date("Y-m-d H:i:s"), $this->generateRandomString()];
 
 		$optionalKeys = ["line1", "line2", "street", "no", "country", "zip", "city", "email"];
 		foreach ($optionalKeys as $optionalKey) {
-			if (isset($data[$optionalKey]) && is_string($data[$optionalKey])) {
+			if (isset($data[$optionalKey]) && is_scalar($data[$optionalKey])) {
 				$keys[] = $optionalKey;
 				$values[] = pg_escape_string($data[$optionalKey]);
 			}
@@ -96,5 +103,51 @@ class ApartmentService {
 
 		$sql = "INSERT INTO my_simple_api "
 			  ."(".implode(", ", $keys).") values ('".implode("', '", $values)."') ";
+
+		Database::getInstance()->query($sql);
+
+
+		$message = str_replace('{{link}}', $values[array_search('token', $keys)], self::EMAIL);
+
+		$email = $values[array_search('email', $keys)];
+
+		@mail($email, "Apartment added", $message, "From: my-simple-api");
+	}
+
+	/**
+	 * @param integer $id
+	 * @param string[] $data
+	 */
+	public function updateItem($id, $data = []) {
+
+		$keys = [];
+		$values = [];
+		$optionalKeys = ["line1", "line2", "street", "no", "country", "zip", "city", "email"];
+		foreach ($optionalKeys as $optionalKey) {
+			$keys[] = $optionalKey;
+			if (isset($data[$optionalKey]) && (is_string($data[$optionalKey]) || is_int($data[$optionalKey])) && $data[$optionalKey] !== "") {
+				$values[] = "'".pg_escape_string($data[$optionalKey])."'";
+			}
+			else {
+				$values[] = 'NULL';
+			}
+		}
+
+		if (count($keys) > 0) {
+			$sql = "UPDATE my_simple_api "
+				  ."SET (".implode(", ", $keys).") = (".implode(", ", $values).") "
+				  ."WHERE id = ".pg_escape_string($id)." ";
+			Database::getInstance()->query($sql);
+		}
+	}
+
+	private function generateRandomString($length = 10) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $randomString;
 	}
 }
