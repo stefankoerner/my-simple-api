@@ -4,7 +4,7 @@ set -e
 ROOT="/www/my-simple-api"
 
 # start postgresql server
-service postgresql start
+service postgresql restart
 
 # reset database
 sudo -u postgres psql -f docker/my-simple-api.sql

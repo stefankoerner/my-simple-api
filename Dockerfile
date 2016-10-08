@@ -22,7 +22,7 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - && \
 
 # install php and postgresql
 RUN apt-get update && apt-get -y install \
-		postgresql \
+		postgresql-9.3 \
 		php5 \
 		php5-pgsql \
 		php5-intl
@@ -38,6 +38,9 @@ COPY ./ /www/my-simple-api
 WORKDIR /www/my-simple-api
 RUN wget http://getcomposer.org/composer.phar
 RUN php composer.phar install
+
+# setup postgresql
+COPY docker/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
 # create api doc
 #RUN npm install && npm run apidoc

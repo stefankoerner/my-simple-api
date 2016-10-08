@@ -1,12 +1,20 @@
 {
-    "name": "my-simple-api",
-    "require": {
-      "php": ">=5.5.0",
-      "slim/slim": "^3.1",
-      "slim/php-view": "^2.0",
-      "monolog/monolog": "^1.17"
+  "name": "my-simple-api",
+  "require": {
+    "php": ">=5.5.0",
+    "slim/slim": "^3.1",
+    "slim/php-view": "^2.0",
+    "monolog/monolog": "^1.17"
+  },
+  "scripts": {
+    "start": "php -S 0.0.0.0:4202 -t src"
+  },
+  "autoload": {
+    "psr-4": {
+      "MySimpleApi\\": "src/"
     },
-    "scripts": {
-      "start": "php -S 0.0.0.0:4202 -t src"
-    }
+    "classmap": [
+      "src/"
+    ]
+  }
 }
