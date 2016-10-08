@@ -40,10 +40,10 @@ RUN wget http://getcomposer.org/composer.phar
 RUN php composer.phar install
 
 # create api doc
-RUN npm install && npm run apidoc
+#RUN npm install && npm run apidoc
 
 # cleanup
-RUN apt-get autoremove && apt-get autoclean & apt-get clean
+#RUN apt-get autoremove && apt-get autoclean && apt-get clean
 
 EXPOSE 4202
 ENTRYPOINT ["docker/run.sh"]

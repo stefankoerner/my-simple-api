@@ -3,7 +3,13 @@ set -e
 
 ROOT="/www/my-simple-api"
 
-cd "$ROOT"
+# start postgresql server
+service postgresql start
 
-php composer.phar start
+# reset database
+sudo -u postgres psql -f docker/my-simple-api.sql
+
+# start php server
+cd "$ROOT"
+php -S 0.0.0.0:4202 -t src
 

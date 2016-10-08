@@ -3,3 +3,4 @@
 /vendor
 /node_modules
 /src/apidoc
+composer.phar
