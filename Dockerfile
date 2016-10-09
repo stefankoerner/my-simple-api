@@ -27,7 +27,7 @@ RUN apt-get update && apt-get -y install \
 		php5-pgsql \
 		php5-intl
 
-# install send_mail
+# install ssmtp to send mails with the host
 RUN apt-get update && apt-get -y install \
 		ssmtp && \
 		echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf && \
