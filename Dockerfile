@@ -43,10 +43,10 @@ RUN php composer.phar install
 COPY docker/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
 # create api doc
-#RUN npm install && npm run apidoc
+RUN npm install && npm run apidoc
 
 # cleanup
-#RUN apt-get autoremove && apt-get autoclean && apt-get clean
+RUN apt-get autoremove && apt-get autoclean && apt-get clean
 
 EXPOSE 4202
 ENTRYPOINT ["docker/run.sh"]
