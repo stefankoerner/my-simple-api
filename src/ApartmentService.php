@@ -62,7 +62,7 @@ This email is spam? Check the source of this email, search for the domain of the
 				}
 			}
 			if (count($sql_filter) > 0) {
-				$sql .= "WHERE ".implode(" && ", $sql_filter)." ";
+				$sql .= "WHERE ".implode(" AND ", $sql_filter)." ";
 			}
 		}
 		$sql .= "ORDER BY msa.id DESC ";
