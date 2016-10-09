@@ -27,7 +27,7 @@ $app = new \Slim\App();
 // Routes
 
 /**
- * @api {get} /apartments Request list of apartment entities
+ * @api {get} /apartments Get a list of apartments
  * @apiParam {String} [page] Page >= 0
  * @apiParam {String} [limit] Items per page
  * @apiParam {String} [filterLime1] Filters columns 'line1'
@@ -67,7 +67,7 @@ $app->get('/apartments', function (Request $request, Response $response, $args) 
 });
 
 /**
- * @api {get} /apartments/:apartmentId Request apartment information
+ * @api {get} /apartments/:apartmentId Get a single apartment
  * @apiGroup Apartment
  * @apiName GetSingleApartment
  * @apiParam {Number} apartmentId Unique apartment id
@@ -98,7 +98,15 @@ $app->get('/apartments/{apartmentId}', function (Request $request, Response $res
 /**
  * @api {post} /apartments Crete a new apartment
  * @apiGroup Apartment
- * @apiParam {String} [key] value
+ * @apiParam {String} [line1] First address line
+ * @apiParam {String} [line2] Second address line
+ * @apiParam {String} [street] Street name
+ * @apiParam {String} [no] Street number
+ * @apiParam {String} [country] Country Code
+ * @apiParam {String} [zip] Postal Code
+ * @apiParam {String} [city] City
+ * @apiParam {String} [email] Email address that receives a token for update / delete requests
+ *
  * @apiName CreateSingleApartment
  */
 $app->post('/apartments', function (Request $request, Response $response, $args) {
@@ -111,7 +119,7 @@ $app->post('/apartments', function (Request $request, Response $response, $args)
 });
 
 /**
- * @api {put} /apartments/:apartmentId Request apartment information
+ * @api {put} /apartments/:apartmentId Update apartment information
  * @apiGroup Apartment
  * @apiName UpdateSingleApartment
  * @apiParam {Number} apartmentId Unique apartment id
@@ -136,10 +144,11 @@ $app->put('/apartments/{apartmentId}', function (Request $request, Response $res
 });
 
 /**
- * @api {delete} /apartments/:apartmentId Delete apartment
+ * @api {delete} /apartments/:apartmentId?token=:token Delete apartment
  * @apiGroup Apartment
  * @apiName DeleteSingleApartment
  * @apiParam {Number} apartmentId Unique apartment id
+ * @apiParam {String} token The token you received by mail
  */
 $app->delete('/apartments/{apartmentId}', function (Request $request, Response $response, $args) {
 

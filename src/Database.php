@@ -2,6 +2,12 @@
 
 namespace MySimpleApi;
 
+
+/**
+ * Class Database
+ * The interface to the local PostgreSQL database.
+ * @package MySimpleApi
+ */
 class Database {
 
 	/**
@@ -35,7 +41,7 @@ class Database {
 
 	/**
 	 * @param string $query
-	 * @return array
+	 * @return array a list of assoc arrays
 	 */
 	public function getList($query) {
 		$list = [];
@@ -48,8 +54,8 @@ class Database {
 	}
 
 	/**
-	 * @param string $query
-	 * @return array
+	 * @param string $query query
+	 * @return array a single row
 	 */
 	public function getItem($query) {
 		$result = pg_query($query) or die('Could not send request ' . pg_last_error());
@@ -59,7 +65,7 @@ class Database {
 	}
 
 	/**
-	 * @param string $query
+	 * @param string $query query
 	 */
 	public function query($query) {
 		$result = pg_query($query);
@@ -67,8 +73,8 @@ class Database {
 	}
 
 	/**
-	 * @param string $query
-	 * @return string
+	 * @param string $query query
+	 * @return string insert id
 	 */
 	public function addItem($query) {
 		$query_last_id = "SELECT max(id) as lastId FROM my_simple_api";

@@ -2,6 +2,11 @@
 
 namespace MySimpleApi;
 
+/**
+ * Class ApartmentService
+ * Service class to manage the apartment entries
+ * @package MySimpleApi
+ */
 class ApartmentService {
 
 	const EMAIL = "
@@ -27,6 +32,7 @@ This email is spam? Check the source of this email, search for the domain of the
 	}
 
 	/**
+	 * Get a filtered list of apartments
 	 * @param int $page
 	 * @param int $limit
 	 * @param boolean|string[] $filter
@@ -66,6 +72,7 @@ This email is spam? Check the source of this email, search for the domain of the
 	}
 
 	/**
+	 * Get a single apartment
 	 * @param integer $id
 	 * @return array
 	 */
@@ -86,6 +93,7 @@ This email is spam? Check the source of this email, search for the domain of the
 	}
 
 	/**
+	 * Add a new apartment
 	 * @param string[] $data
 	 */
 	public function addItem($data = []) {
@@ -115,6 +123,7 @@ This email is spam? Check the source of this email, search for the domain of the
 	}
 
 	/**
+	 * Update an existing apartment
 	 * @param integer $id
 	 * @param string[] $data
 	 */
@@ -141,12 +150,21 @@ This email is spam? Check the source of this email, search for the domain of the
 		}
 	}
 
+	/**
+	 * Delete a single apartment
+	 * @param integer $id
+	 */
 	public function deleteItem($id) {
 		$sql = "DELETE FROM my_simple_api "
 			  ."WHERE id = ".pg_escape_string($id)." ";
 		Database::getInstance()->query($sql);
 	}
 
+	/**
+	 * Generates a random string, used by addItem()
+	 * @param int $length
+	 * @return string
+	 */
 	private function generateRandomString($length = 10) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$charactersLength = strlen($characters);
