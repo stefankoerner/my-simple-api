@@ -104,13 +104,13 @@ This email is spam? Check the source of this email, search for the domain of the
 		$sql = "INSERT INTO my_simple_api "
 			  ."(".implode(", ", $keys).") values ('".implode("', '", $values)."') ";
 
-		Database::getInstance()->query($sql);
-
-
-		$message = str_replace('{{link}}', $values[array_search('token', $keys)], self::EMAIL);
-
+		// send email
+		$id = Database::getInstance()->addItem($sql);
+		$token = $values[array_search('token', $keys)];
+		$frontend = getenv('FRONTEND_URL') ? : 'http://localhost:4200';
+		$link = $frontend . '/apartments/edit/' . $id . '?token=' . $token;
+		$message = str_replace('{{link}}', $link, self::EMAIL);
 		$email = $values[array_search('email', $keys)];
-
 		@mail($email, "Apartment added", $message, "From: my-simple-api");
 	}
 
@@ -139,6 +139,12 @@ This email is spam? Check the source of this email, search for the domain of the
 				  ."WHERE id = ".pg_escape_string($id)." ";
 			Database::getInstance()->query($sql);
 		}
+	}
+
+	public function deleteItem($id) {
+		$sql = "DELETE FROM my_simple_api "
+			  ."WHERE id = ".pg_escape_string($id)." ";
+		Database::getInstance()->query($sql);
 	}
 
 	private function generateRandomString($length = 10) {

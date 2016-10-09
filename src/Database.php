@@ -65,4 +65,17 @@ class Database {
 		$result = pg_query($query);
 		pg_free_result($result);
 	}
+
+	/**
+	 * @param string $query
+	 * @return string
+	 */
+	public function addItem($query) {
+		$query_last_id = "SELECT max(id) as lastId FROM my_simple_api";
+		$result = pg_query($query.';'.$query_last_id.';');
+		$row = pg_fetch_array($result,0,PGSQL_ASSOC);
+		$id = isset($row['lastid']) ? $row['lastid'] : false;
+		pg_free_result($result);
+		return $id;
+	}
 }

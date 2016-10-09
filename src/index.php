@@ -19,6 +19,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
+Environment::init();
+
 // Instantiate the app
 $app = new \Slim\App();
 
@@ -129,6 +131,30 @@ $app->put('/apartments/{apartmentId}', function (Request $request, Response $res
 
 	// update apartment
 	ApartmentService::getInstance()->updateItem($item['id'], $data);
+	$response = $response->withStatus(204);
+	return $response;
+});
+
+/**
+ * @api {delete} /apartments/:apartmentId Delete apartment
+ * @apiGroup Apartment
+ * @apiName DeleteSingleApartment
+ * @apiParam {Number} apartmentId Unique apartment id
+ */
+$app->delete('/apartments/{apartmentId}', function (Request $request, Response $response, $args) {
+
+	$item = ApartmentService::getInstance()->getItem($request->getAttribute('apartmentId'));
+
+	// check token
+	$token = isset($_GET['token']) && is_string($_GET['token']) ? $_GET['token'] : false;
+	if ($token !== $item['token']) {
+		$response = $response->withStatus(403);
+		$response->getBody()->write("You cannot delete this apartment.");
+		return $response;
+	}
+
+	// delete apartment
+	ApartmentService::getInstance()->deleteItem($item['id']);
 	$response = $response->withStatus(204);
 	return $response;
 });

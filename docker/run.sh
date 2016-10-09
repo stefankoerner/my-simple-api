@@ -22,5 +22,8 @@ fi;
 
 # start php server
 cd "$ROOT"
+if [ "$FRONTEND_URL" ]; then
+    echo "FRONTEND_URL=$FRONTEND_URL" >> src/.env
+fi;
 php -S 0.0.0.0:4202 -t src
 
