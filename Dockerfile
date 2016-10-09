@@ -27,11 +27,11 @@ RUN apt-get update && apt-get -y install \
 		php5-pgsql \
 		php5-intl
 
-# install ssmtp to send mails with the host
+# install ssmtp to send mails with gmail
 RUN apt-get update && apt-get -y install \
 		ssmtp && \
-		echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf && \
 		echo 'sendmail_path = "/usr/sbin/ssmtp -t"' > /etc/php5/cli/conf.d/mail.ini
+COPY ./docker/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
 # build project
 COPY ./ /www/my-simple-api
