@@ -13,6 +13,7 @@ RUN apt-get update && apt-get -y install \
 		zip \
 		wget \
 		python \
+		python-setuptools \
 		vim
 
 # install node 6
