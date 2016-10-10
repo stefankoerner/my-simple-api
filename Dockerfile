@@ -46,7 +46,7 @@ COPY docker/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 RUN npm install && npm run apidoc
 
 # cleanup
-RUN apt-get autoremove && apt-get autoclean && apt-get clean
+RUN apt-get autoremove && apt-get autoclean && apt-get clean && npm cache clear
 
 EXPOSE 4202
 ENTRYPOINT ["docker/run.sh"]
